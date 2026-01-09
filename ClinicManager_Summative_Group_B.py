@@ -52,6 +52,53 @@ class Patient:
         """Format the patient details for display"""
         return f"{self.patient_id} | {self.name} | Age: {self.age} | Contact: {self.contact} | Gender: {self.gender}"
 
+#DOCTOR CLASS
+from datetime import datetime
 
+class Doctor:
+    def __init__(self, doctor_id, name, specialty, available_days, start_time, end_time):
+        self.doctor_id = doctor_id  # Unique ID for each doctor (e.g., D001)
+        self.name = name  # Full name of the doctor
+        self.specialty = specialty  # Area of specialization (e.g., Dentistry, Cardiology)
+        self.available_days = available_days.split('-')  # Convert "Mon-Tue-Wed" to ['Mon', 'Tue', 'Wed']
+        self.start_time = start_time  # When doctor starts work (HH:MM format)
+        self.end_time = end_time  # When doctor finishes work (HH:MM format)
+
+    def is_available_on_day(self, date):
+        """
+        Check if the doctor works on the given date.
+
+        Args:
+            date: datetime object or string in YYYY-MM-DD format
+
+        Returns:
+            True if doctor works on that day, False otherwise
+        """
+        # Convert string to datetime if needed
+        if isinstance(date, str):
+            date = datetime.strptime(date, "%Y-%m-%d")
+
+        # Get the day name (e.g., 'Mon', 'Tue', 'Wed')
+        day_name = date.strftime("%a")
+
+        return day_name in self.available_days
+
+    def is_within_working_hours(self, time):
+        """
+        Check if the given time falls within the doctor's working hours.
+
+        Args:
+            time: Time string in HH:MM format
+
+        Returns:
+            True if time is within working hours, False otherwise
+        """
+        return self.start_time <= time <= self.end_time
+
+    def __str__(self):
+        """Format the doctor details for display"""
+        days = ', '.join(self.available_days)
+        return (f"{self.doctor_id} | Dr. {self.name} | {self.specialty} | "
+                f"Available: {days} ({self.start_time}-{self.end_time})")
 
 
