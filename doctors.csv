@@ -1,0 +1,6 @@
+doctor_id,name,specialty,available_days
+D001,Dr. Jane Cooper,General Practice,Mon-Tue-Wed-Thu-Fri
+D002,Dr. Robert Chen,Dentistry,Mon-Wed-Fri
+D003,Dr. Amara Patel,Physiotherapy,Tue-Thu-Fri
+D004,Dr. Lisa Martinez,Radiology,Mon-Tue-Wed-Thu-Fri
+D005,Dr. Ahmed Hassan,Cardiology,Wed-Thu
