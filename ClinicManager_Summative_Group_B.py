@@ -39,6 +39,18 @@ class Appointment:
                 f"{self.date} {self.time}-{end_time} ({self.duration}min) | "
                 f"{self.department} | {self.purpose} | Status: {self.status}")
 
+# PATIENT CLASS
+class Patient:
+    def __init__(self, patient_id, name, age, contact, gender):
+        self.patient_id = patient_id  # Unique ID for each patient (e.g., P001)
+        self.name = name  # Full name of the patient
+        self.age = int(age)  # Age of the patient
+        self.contact = contact  # Phone number
+        self.gender = gender  # Gender (Male/Female)
+
+    def __str__(self):
+        """Format the patient details for display"""
+        return f"{self.patient_id} | {self.name} | Age: {self.age} | Contact: {self.contact} | Gender: {self.gender}"
 
 
 
