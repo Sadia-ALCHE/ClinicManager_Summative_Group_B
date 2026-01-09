@@ -3,7 +3,6 @@
 # Halimatu Sadia Mohammed
 # Hanif Olayiwola
 
-
 # APPOINTMENT CLASS
 # Now, this class is basically representing an appointment made by a patient.
 # It is going to help us store appointment-related details plus status.
