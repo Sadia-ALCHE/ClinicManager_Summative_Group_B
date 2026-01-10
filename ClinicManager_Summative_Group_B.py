@@ -285,6 +285,20 @@ class ClinicManager:
 
         return True
 
+    def slot_available(self, doctor_id, date, time, duration):
+        '''Check for overlapping appointments using duration'''
+        new_start = datetime.strptime(time, "%H:%M")
+        new_end = new_start + timedelta(minutes=duration)
+
+        for a in self.appointments:
+            if a.doctor_id == doctor_id and a.date == date and a.status == "Booked":
+                existing_start = datetime.strptime(a.start_time, "%H:%M")
+                existing_end = existing_start + timedelta(minutes=a.duration)
+                # Overlap check
+                if new_start < existing_end and new_end > existing_start:
+                    return False
+        return True
+
 
 
 
