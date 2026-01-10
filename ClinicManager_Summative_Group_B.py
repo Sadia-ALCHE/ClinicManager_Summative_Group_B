@@ -259,6 +259,15 @@ class ClinicManager:
     def patient_exists(self, patient_id):
         return any(p.patient_id == patient_id for p in self.patients)
 
+    def doctor_exists(self, doctor_id):
+        return any(d.doctor_id == doctor_id for d in self.doctors)
+
+    def get_doctor_by_id(self, doctor_id):
+        for d in self.doctors:
+            if d.doctor_id == doctor_id:
+                return d
+        return None
+
 
 
 
