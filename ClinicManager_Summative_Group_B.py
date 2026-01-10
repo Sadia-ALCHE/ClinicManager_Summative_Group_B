@@ -249,4 +249,16 @@ class ClinicManager:
         self.doctors = load_doctors()
         self.appointments = load_appointments()
 
+    # VALIDATION SECTIONS
+    def get_patient_name(self, patient_id):
+        for p in self.patients:
+            if p.patient_id == patient_id:
+                return p.name
+        return "Unknown"
+
+
+
+
+
+
 
