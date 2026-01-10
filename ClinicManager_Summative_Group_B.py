@@ -268,6 +268,23 @@ class ClinicManager:
                 return d
         return None
 
+    def check_doctor_availability(self, doctor_id, date, time):
+        doctor = self.get_doctor_by_id(doctor_id)
+
+        if not doctor:
+            print("Doctor not found")
+            return False
+
+        if not doctor.is_available_on_day(date):
+            print("Doctor does not work on this day.")
+            return False
+
+        if not doctor.is_within_working_hours(time):
+            print("Outside doctor's working hours.")
+            return False
+
+        return True
+
 
 
 
