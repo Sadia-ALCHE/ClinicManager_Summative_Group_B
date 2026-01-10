@@ -1,23 +1,39 @@
-# Clinic Appointment & Patient Management System(Group B)
-# Team Members:
-# Halimatu Sadia Mohammed
-# Hanif Olayiwola
+'''
+Clinic Appointment & Patient Management System(Group B)
+Team Members:
+Halimatu Sadia Mohammed
+Hanif Olayiwola '''
 
 import csv
 import os
 from datetime import datetime, timedelta
+# PATIENT CLASS
+class Patient:
+    """Represents a patient in the clinic system"""
+
+    def __init__(self, patient_id, name, age, contact, gender):
+        self.patient_id = patient_id  # Unique ID (e.g., P001)
+        self.name = name  # Full name
+        self.age = int(age)  # Age
+        self.contact = contact  # Phone number
+        self.gender = gender  # Gender (Male/Female)
+
+    def __str__(self):
+        """Format patient details for display"""
+        return f"{self.patient_id} | {self.name} | Age: {self.age} | Contact: {self.contact} | Gender: {self.gender}"
+
 # APPOINTMENT CLASS
-# Now, this class is basically representing an appointment made by a patient.
-# It is going to help us store appointment-related details plus status.
+'''Represents an appointment of a patient in the clinic system
+It is going to help us store appointment-related details plus status. '''
 class Appointment:
     def __init__(self, appointment_id, patient_id, doctor_id, date, time, duration, department, purpose,
                  status="Booked"):
         self.appointment_id = appointment_id  # The unique ID for each appointment
-        self.patient_id = patient_id  # The ID of the patient who owns this appointment
+        self.patient_id = patient_id  # Unique ID of the patient(e.g., P001)
         self.doctor_id = doctor_id  # The ID of the doctor (UPDATED from 'doctor')
         self.date = date  # Appointment date (format: YYYY-MM-DD)
         self.time = time  # Appointment time (format: HH:MM)
-        self.duration = int(duration)  # Duration in minutes (NEW)
+        self.duration = int(duration)  # Duration in minutes
         self.department = department  # The department/type of appointment (Dental, X-Ray, etc.)
         self.purpose = purpose  # Purpose of the visit
         self.status = status  # Status of appointment (Booked or Cancelled)
@@ -37,21 +53,6 @@ class Appointment:
         return (f"{self.appointment_id} | Patient: {self.patient_id} | Doctor: {self.doctor_id} | "
                 f"{self.date} {self.time}-{end_time} ({self.duration}min) | "
                 f"{self.department} | {self.purpose} | Status: {self.status}")
-
-# PATIENT CLASS
-class Patient:
-    """Represents a patient in the clinic system"""
-
-    def __init__(self, patient_id, name, age, contact, gender):
-        self.patient_id = patient_id  # Unique ID (e.g., P001)
-        self.name = name  # Full name
-        self.age = int(age)  # Age
-        self.contact = contact  # Phone number
-        self.gender = gender  # Gender (Male/Female)
-
-    def __str__(self):
-        """Format patient details for display"""
-        return f"{self.patient_id} | {self.name} | Age: {self.age} | Contact: {self.contact} | Gender: {self.gender}"
 
 
 class Doctor:
@@ -240,4 +241,12 @@ def save_appointments(appointments, filename="appointments.csv"):
 
     except Exception as e:
         print(f"✗ Error saving appointments: {e}")
+
+#  CLINIC MANAGER
+class ClinicManager:
+    def __init__(self):
+        self.patients = load_patients()
+        self.doctors = load_doctors()
+        self.appointments = load_appointments()
+
 
