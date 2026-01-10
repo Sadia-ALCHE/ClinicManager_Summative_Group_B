@@ -256,6 +256,9 @@ class ClinicManager:
                 return p.name
         return "Unknown"
 
+    def patient_exists(self, patient_id):
+        return any(p.patient_id == patient_id for p in self.patients)
+
 
 
 
