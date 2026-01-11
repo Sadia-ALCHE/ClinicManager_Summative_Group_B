@@ -299,6 +299,74 @@ class ClinicManager:
                     return False
         return True
 
+    # PATIENT MANAGEMENT ====>>> HANIF
+    ''' 
+    add_patient()
+    search_patient()
+    show_patients()
+    '''
+
+    # APPOINTMENT MANAGEMENT
+    def book_appointment(self):
+        try:
+            patient_id = input("Enter patient ID: ")
+            if not self.patient_exists(patient_id):
+                print("Patient not found.")
+                return
+
+            doctor_id = input("Enter doctor ID: ")
+            if not self.doctor_exists(doctor_id):
+                print("Doctor not found.")
+                return
+
+            print("Appointment Types:")
+            print("1. Dental (30 mins)")
+            print("2. X-Ray (20 mins)")
+            print("3. Physio (45 mins)")
+            print("4. General Consultation (30 mins)")
+
+            type_choice = input("Choose appointment type: ")
+
+            if type_choice == "1":
+                department, duration = "Dental", 30
+            elif type_choice == "2":
+                department, duration = "X-Ray", 20
+            elif type_choice == "3":
+                department, duration = "Physio", 45
+            elif type_choice == "4":
+                department, duration = "General", 30
+            else:
+                print("Invalid choice.")
+                return
+
+            date = input("Enter date (YYYY-MM-DD): ")
+            time = input("Enter time (HH:MM): ")
+            purpose = input("Enter purpose: ")
+
+            if not self.slot_available(doctor_id, date, time, duration):
+                print("Time slot is already booked.")
+                return
+
+            appointment_id = len(self.appointments) + 1
+
+            self.appointments.append(
+                Appointment(
+                    appointment_id,
+                    patient_id,
+                    doctor_id,
+                    date,
+                    time,
+                    duration,
+                    department,
+                    purpose
+                )
+            )
+
+            save_appointments(self.appointments)
+            print("Appointment booked successfully.")
+
+        except ValueError:
+            print("Invalid input.")
 
 
 
