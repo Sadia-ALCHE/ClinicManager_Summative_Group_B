@@ -610,37 +610,61 @@ class ClinicManager:
 # MAIN MENU
 
 def main():
+    """Main menu for the clinic management system"""
     system = ClinicManager()
 
     while True:
-        print("-- Clinic Management System --")
-        print("4. Book appointment")
-        print("5. Cancel appointment")
-        print("6. Reschedule appointment")
-        print("7. Show appointments")
-        print("8. Search appointment")
-        print("0. Exit")
+        print("\n" + "=" * 50)
+        print("   CLINIC APPOINTMENT & PATIENT MANAGEMENT SYSTEM")
+        print("=" * 50)
+        print("\n--- Patient Management ---")
+        print("1. Add Patient")
+        print("2. Search Patient")
+        print("3. Show All Patients")
+        print("\n--- Doctor Management ---")
+        print("4. Show All Doctors")
+        print("5. Search Doctor")
+        print("\n--- Appointment Management ---")
+        print("6. Book Appointment")
+        print("7. Cancel Appointment")
+        print("8. Reschedule Appointment")
+        print("9. Show All Appointments")
+        print("10. Search Appointments")
+        print("\n0. Exit")
+        print("=" * 50)
 
-        choice = input("Enter your choice: ")
+        choice = input("\nEnter your choice: ").strip()
 
-        if choice == "4":
-            system.book_appointment()
+        if choice == "1":
+            system.add_patient()
+        elif choice == "2":
+            system.search_patient()
+        elif choice == "3":
+            system.show_patients()
+        elif choice == "4":
+            system.show_doctors()
         elif choice == "5":
-            system.cancel_appointment()
+            system.search_doctor()
         elif choice == "6":
-            system.reschedule_appointment()
+            system.book_appointment()
         elif choice == "7":
-            system.show_appointments()
+            system.cancel_appointment()
         elif choice == "8":
+            system.reschedule_appointment()
+        elif choice == "9":
+            system.show_appointments()
+        elif choice == "10":
             system.search_appointment()
         elif choice == "0":
-            print("Thank you for using Clinic Manager. Goodbye!")
+            print("\n✓ Thank you for using Clinic Management System. Goodbye!")
             break
         else:
-            print("Invalid choice.")
+            print("\n✗ Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     main()
+
 
 
 
