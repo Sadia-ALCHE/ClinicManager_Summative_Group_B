@@ -456,12 +456,13 @@ class ClinicManager:
             print("-" * 100)
         else:
             print(f"✗ No doctors found matching '{search_term}'")
+
     # APPOINTMENT MANAGEMENT
     def book_appointment(self):
         try:
             patient_id = input("Enter patient ID: ")
             if not self.patient_exists(patient_id):
-                print("Patient not found.")
+                print("Patient not found. Please register patient first.")
                 return
 
             doctor_id = input("Enter doctor ID: ")
@@ -536,17 +537,35 @@ class ClinicManager:
 
     def reschedule_appointment(self):
         try:
-            appointment_id = input("Enter appointment ID: ")
+            patient_id = input("Enter patient ID: ")
+
+            patient_apps = [
+                a for a in self.appointments
+                if a.patient_id == patient_id and a.status == "Booked"
+            ]
+
+            if not patient_apps:
+                print("No active appointments for this patient.")
+                return
+
+            print("\nID | Date | Time | Doctor | Department | Purpose")
+            print("-" * 65)
+            for a in patient_apps:
+                print(
+                    f"{a.appointment_id} | {a.date} | {a.time} | "
+                    f"{a.doctor} | {a.department} | {a.purpose}"
+                )
+
+            appointment_id = input("\nEnter appointment ID to reschedule: ")
+            new_date = input("Enter new date (YYYY-MM-DD): ")
+            new_time = input("Enter new time (HH:MM): ")
+
+            if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
+                print("Time slot is already booked.")
+                return
 
             for a in self.appointments:
-                if a.appointment_id == appointment_id and a.status == "Booked":
-                    new_date = input("Enter new date (YYYY-MM-DD): ")
-                    new_time = input("Enter new time (HH:MM): ")
-
-                    if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
-                       print("Time slot is already booked.")
-                       return
-
+                if a.appointment_id == appointment_id:
                     a.date = new_date
                     a.time = new_time
                     save_appointments(self.appointments)
@@ -563,7 +582,7 @@ class ClinicManager:
             print("No appointments found.")
             return
 
-        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status")
+        print("\nAppointment ID | Patient | Doctor | Date | Time | Department | Status")
 
         for a in self.appointments:
             patient_name = self.get_patient_name(a.patient_id)
@@ -579,7 +598,7 @@ class ClinicManager:
         choice = input("Search by: 1. Doctor or 2. Department: ")
 
         found = False
-        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status ")
+        print("\nAppointment ID | Patient | Doctor | Date | Time | Department | Status ")
 
         if choice == "1":
             doctor_id = input("Enter doctor ID: ")
@@ -601,13 +620,6 @@ class ClinicManager:
 
         if not found:
             print("No matching appointments found.")
-#DOCTOR MANAGEMENT
-
-    # DOCTOR MANAGEMENT ====>>> HANIF
-    ''' 
-    show_doctors() 
-    search_doctor()
-    '''
 
 # MAIN MENU
 
@@ -617,7 +629,7 @@ def main():
 
     while True:
         print("\n" + "=" * 50)
-        print("   CLINIC APPOINTMENT & PATIENT MANAGEMENT SYSTEM")
+        print("   CLINIC APPOINTMENT & PATIENT MANAGEMENT SYSTEM  ")
         print("=" * 50)
         print("\n--- Patient Management ---")
         print("1. Add Patient")
@@ -658,10 +670,10 @@ def main():
         elif choice == "10":
             system.search_appointment()
         elif choice == "0":
-            print("\n✓ Thank you for using Clinic Management System. Goodbye!")
+            print("\nThank you for using Clinic Management System. Goodbye!")
             break
         else:
-            print("\n✗ Invalid choice. Please try again.")
+            print("\nInvalid choice. Please try again.")
 
 
 if __name__ == "__main__":
