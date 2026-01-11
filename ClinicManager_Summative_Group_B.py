@@ -484,7 +484,7 @@ class ClinicManager:
             elif type_choice == "3":
                 department, duration = "Physio", 45
             elif type_choice == "4":
-                department, duration = "General", 30
+                department, duration = "General Consultation", 30
             else:
                 print("Invalid choice.")
                 return
@@ -492,6 +492,9 @@ class ClinicManager:
             date = input("Enter date (YYYY-MM-DD): ")
             time = input("Enter time (HH:MM): ")
             purpose = input("Enter purpose: ")
+
+            if not self.check_doctor_availability(doctor_id, date, time):
+                return
 
             if not self.slot_available(doctor_id, date, time, duration):
                 print("Time slot is already booked.")
@@ -519,32 +522,41 @@ class ClinicManager:
             print("Invalid input.")
 
     def cancel_appointment(self):
-        appointment_id = input("Enter appointment ID: ")
-        for a in self.appointments:
-            if a.appointment_id == appointment_id:
-                a.status = "Cancelled"
-                save_appointments(self.appointments)
-                print("Appointment cancelled successfully.")
-                return
-        print("Appointment not found.")
+        try:
+            appointment_id = input("Enter appointment ID: ")
+            for a in self.appointments:
+                if a.appointment_id == appointment_id:
+                   a.status = "Cancelled"
+                   save_appointments(self.appointments)
+                   print("Appointment cancelled successfully.")
+                   return
+            print("Appointment not found.")
+        except ValueError:
+            print("Invalid input.")
 
     def reschedule_appointment(self):
-        appointment_id = input("Enter appointment ID: ")
-        for a in self.appointments:
-            if a.appointment_id == appointment_id and a.status == "Booked":
-                new_date = input("Enter new date (YYYY-MM-DD): ")
-                new_time = input("Enter new time (HH:MM): ")
+        try:
+            appointment_id = input("Enter appointment ID: ")
 
-                if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
-                    print("Time slot is already booked.")
+            for a in self.appointments:
+                if a.appointment_id == appointment_id and a.status == "Booked":
+                    new_date = input("Enter new date (YYYY-MM-DD): ")
+                    new_time = input("Enter new time (HH:MM): ")
+
+                    if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
+                       print("Time slot is already booked.")
+                       return
+
+                    a.date = new_date
+                    a.time = new_time
+                    save_appointments(self.appointments)
+                    print("Appointment rescheduled successfully.")
                     return
 
-                a.date = new_date
-                a.time = new_time
-                save_appointments(self.appointments)
-                print("Appointment rescheduled successfully.")
-                return
-        print("Appointment not found.")
+            print("Appointment not found.")
+
+        except ValueError:
+            print("Invalid input.")
 
     def show_appointments(self):
         if not self.appointments:
@@ -589,6 +601,11 @@ class ClinicManager:
             print("No matching appointments found.")
 #DOCTOR MANAGEMENT
 
+    # DOCTOR MANAGEMENT ====>>> HANIF
+    ''' 
+    show_doctors() 
+    search_doctor()
+    '''
 
 # MAIN MENU
 
@@ -609,13 +626,13 @@ def main():
         if choice == "4":
             system.book_appointment()
         elif choice == "5":
-            system.search_appointment()
-        elif choice == "6":
             system.cancel_appointment()
-        elif choice == "7":
+        elif choice == "6":
             system.reschedule_appointment()
-        elif choice == "8":
+        elif choice == "7":
             system.show_appointments()
+        elif choice == "8":
+            system.search_appointment()
         elif choice == "0":
             print("Thank you for using Clinic Manager. Goodbye!")
             break
