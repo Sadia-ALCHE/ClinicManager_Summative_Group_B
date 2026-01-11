@@ -439,7 +439,40 @@ class ClinicManager:
             print("No matching appointments found.")
 
 
+# MAIN MENU
 
+def main():
+    system = ClinicManager()
+
+    while True:
+        print("-- Clinic Management System --")
+        print("4. Book appointment")
+        print("5. Cancel appointment")
+        print("6. Reschedule appointment")
+        print("7. Show appointments")
+        print("8. Search appointment")
+        print("0. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "4":
+            system.book_appointment()
+        elif choice == "5":
+            system.search_appointment()
+        elif choice == "6":
+            system.cancel_appointment()
+        elif choice == "7":
+            system.reschedule_appointment()
+        elif choice == "8":
+            system.show_appointments()
+        elif choice == "0":
+            print("Thank you for using Clinic Manager. Goodbye!")
+            break
+        else:
+            print("Invalid choice.")
+
+if __name__ == "__main__":
+    main()
 
 
 
