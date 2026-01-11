@@ -292,7 +292,7 @@ class ClinicManager:
 
         for a in self.appointments:
             if a.doctor_id == doctor_id and a.date == date and a.status == "Booked":
-                existing_start = datetime.strptime(a.start_time, "%H:%M")
+                existing_start = datetime.strptime(a.time, "%H:%M")
                 existing_end = existing_start + timedelta(minutes=a.duration)
                 # Overlap check
                 if new_start < existing_end and new_end > existing_start:
@@ -450,6 +450,11 @@ class ClinicManager:
         if not found:
             print("No matching appointments found.")
 
+    # DOCTOR MANAGEMENT ====>>> HANIF
+    ''' 
+    show_doctors() 
+    search_doctor()
+    '''
 
 # MAIN MENU
 
@@ -470,13 +475,13 @@ def main():
         if choice == "4":
             system.book_appointment()
         elif choice == "5":
-            system.search_appointment()
-        elif choice == "6":
             system.cancel_appointment()
-        elif choice == "7":
+        elif choice == "6":
             system.reschedule_appointment()
-        elif choice == "8":
+        elif choice == "7":
             system.show_appointments()
+        elif choice == "8":
+            system.search_appointment()
         elif choice == "0":
             print("Thank you for using Clinic Manager. Goodbye!")
             break
