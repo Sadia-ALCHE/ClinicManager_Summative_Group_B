@@ -378,6 +378,24 @@ class ClinicManager:
                 return
         print("Appointment not found.")
 
+    def reschedule_appointment(self):
+        appointment_id = input("Enter appointment ID: ")
+        for a in self.appointments:
+            if a.appointment_id == appointment_id and a.status == "Booked":
+                new_date = input("Enter new date (YYYY-MM-DD): ")
+                new_time = input("Enter new time (HH:MM): ")
+
+                if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
+                    print("Time slot is already booked.")
+                    return
+
+                a.date = new_date
+                a.time = new_time
+                save_appointments(self.appointments)
+                print("Appointment rescheduled successfully.")
+                return
+        print("Appointment not found.")
+
 
 
 
