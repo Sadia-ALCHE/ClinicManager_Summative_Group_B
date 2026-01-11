@@ -372,14 +372,17 @@ class ClinicManager:
             print("Invalid input.")
 
     def cancel_appointment(self):
-        appointment_id = input("Enter appointment ID: ")
-        for a in self.appointments:
-            if a.appointment_id == appointment_id:
-                a.status = "Cancelled"
-                save_appointments(self.appointments)
-                print("Appointment cancelled successfully.")
-                return
-        print("Appointment not found.")
+        try:
+            appointment_id = input("Enter appointment ID: ")
+            for a in self.appointments:
+                if a.appointment_id == appointment_id:
+                   a.status = "Cancelled"
+                   save_appointments(self.appointments)
+                   print("Appointment cancelled successfully.")
+                   return
+            print("Appointment not found.")
+        except ValueError:
+            print("Invalid input.")
 
     def reschedule_appointment(self):
         appointment_id = input("Enter appointment ID: ")
