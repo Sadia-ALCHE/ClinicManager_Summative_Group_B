@@ -500,7 +500,12 @@ class ClinicManager:
                 print("Time slot is already booked.")
                 return
 
-            appointment_id = len(self.appointments) + 1
+            if self.appointments:
+                last_id = self.appointments[-1].appointment_id
+                id_number = int(last_id[1:]) + 1
+                appointment_id = f"A{id_number:03d}"
+            else:
+                appointment_id = "A001"
 
             self.appointments.append(
                 Appointment(
@@ -543,9 +548,12 @@ class ClinicManager:
                     new_date = input("Enter new date (YYYY-MM-DD): ")
                     new_time = input("Enter new time (HH:MM): ")
 
+                    if not self.check_doctor_availability(a.doctor_id, new_date, new_time):
+                        return
+
                     if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
-                       print("Time slot is already booked.")
-                       return
+                        print("Time slot is already booked.")
+                        return
 
                     a.date = new_date
                     a.time = new_time
@@ -567,7 +575,7 @@ class ClinicManager:
 
         for a in self.appointments:
             print(
-                f"{a.appointment_id} | self.get_patient_name(a.patient_id) | " 
+                f"{a.appointment_id} | {self.get_patient_name(a.patient_id)} | " 
                 f"{a.doctor_id} | {a.date} | "
                 f"{a.time}-{a.get_end_time()} | "
                 f"{a.department} | {a.status}"
@@ -589,7 +597,7 @@ class ClinicManager:
         elif choice == "2":
             department = input("Enter department: ")
             for a in self.appointments:
-                if a.department_id == department:
+                if a.department == department:
                     print(a)
                     found = True
 
