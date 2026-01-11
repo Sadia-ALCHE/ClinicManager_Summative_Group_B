@@ -334,7 +334,7 @@ class ClinicManager:
             elif type_choice == "3":
                 department, duration = "Physio", 45
             elif type_choice == "4":
-                department, duration = "General", 30
+                department, duration = "General Consultation", 30
             else:
                 print("Invalid choice.")
                 return
@@ -342,6 +342,9 @@ class ClinicManager:
             date = input("Enter date (YYYY-MM-DD): ")
             time = input("Enter time (HH:MM): ")
             purpose = input("Enter purpose: ")
+
+            if not self.check_doctor_availability(doctor_id, date, time):
+                return
 
             if not self.slot_available(doctor_id, date, time, duration):
                 print("Time slot is already booked.")
