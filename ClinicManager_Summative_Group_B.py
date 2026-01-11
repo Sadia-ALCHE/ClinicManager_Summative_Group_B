@@ -413,11 +413,13 @@ class ClinicManager:
             print("No appointments found.")
             return
 
-        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status ")
+        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status")
 
         for a in self.appointments:
+            patient_name = self.get_patient_name(a.patient_id)
+
             print(
-                f"{a.appointment_id} | self.get_patient_name(a.patient_id) | " 
+                f"{a.appointment_id} | {patient_name} | "
                 f"{a.doctor_id} | {a.date} | "
                 f"{a.time}-{a.get_end_time()} | "
                 f"{a.department} | {a.status}"
@@ -439,7 +441,7 @@ class ClinicManager:
         elif choice == "2":
             department = input("Enter department: ")
             for a in self.appointments:
-                if a.department_id == department:
+                if a.department == department:
                     print(a)
                     found = True
 
