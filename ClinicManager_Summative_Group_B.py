@@ -411,6 +411,34 @@ class ClinicManager:
                 f"{a.department} | {a.status}"
             )
 
+    def search_appointment(self):
+        choice = input("Search by: 1. Doctor or 2. Department: ")
+
+        found = False
+        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status ")
+
+        if choice == "1":
+            doctor_id = input("Enter doctor ID: ")
+            for a in self.appointments:
+                if a.doctor_id == doctor_id:
+                    print(a)
+                    found = True
+
+        elif choice == "2":
+            department = input("Enter department: ")
+            for a in self.appointments:
+                if a.department_id == department:
+                    print(a)
+                    found = True
+
+        else:
+            print("Invalid choice.")
+            return
+
+        if not found:
+            print("No matching appointments found.")
+
+
 
 
 
