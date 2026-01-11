@@ -396,6 +396,23 @@ class ClinicManager:
                 return
         print("Appointment not found.")
 
+    def show_appointments(self):
+        if not self.appointments:
+            print("No appointments found.")
+            return
+
+        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status ")
+
+        for a in self.appointments:
+            print(
+                f"{a.appointment_id} | self.get_patient_name(a.patient_id) | " 
+                f"{a.doctor_id} | {a.date} | "
+                f"{a.time}-{a.get_end_time()} | "
+                f"{a.department} | {a.status}"
+            )
+
+
+
 
 
 
