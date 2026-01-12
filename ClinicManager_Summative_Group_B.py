@@ -5,7 +5,6 @@ Halimatu Sadia Mohammed
 Hanif Olayiwola '''
 
 import csv
-import os
 from datetime import datetime, timedelta
 # PATIENT CLASS
 class Patient:
@@ -30,7 +29,7 @@ class Appointment:
                  status="Booked"):
         self.appointment_id = appointment_id  # The unique ID for each appointment
         self.patient_id = patient_id  # Unique ID of the patient(e.g., P001)
-        self.doctor_id = doctor_id  # The ID of the doctor (UPDATED from 'doctor')
+        self.doctor_id = doctor_id  # The ID of the doctor(e.g., D001)
         self.date = date  # Appointment date (format: YYYY-MM-DD)
         self.time = time  # Appointment time (format: HH:MM)
         self.duration = int(duration)  # Duration in minutes
@@ -100,7 +99,6 @@ def load_patients(filename="patients.csv"):
                     gender=row['gender']
                 )
                 patients.append(patient)
-        print(f"✓ Loaded {len(patients)} patients from {filename}")
 
     except FileNotFoundError:
         print(f"Warning: {filename} not found. Starting with empty patient list.")
@@ -150,7 +148,6 @@ def load_doctors(filename="doctors.csv"):
                     end_time=row['end_time']
                 )
                 doctors.append(doctor)
-        print(f"✓ Loaded {len(doctors)} doctors from {filename}")
 
     except FileNotFoundError:
         print(f"Warning: {filename} not found. Starting with empty doctor list.")
@@ -205,7 +202,6 @@ def load_appointments(filename="appointments.csv"):
                     status=row['status']
                 )
                 appointments.append(appointment)
-        print(f"✓ Loaded {len(appointments)} appointments from {filename}")
 
     except FileNotFoundError:
         print(f"Warning: {filename} not found. Starting with empty appointment list.")
@@ -456,12 +452,13 @@ class ClinicManager:
             print("-" * 100)
         else:
             print(f"✗ No doctors found matching '{search_term}'")
+
     # APPOINTMENT MANAGEMENT
     def book_appointment(self):
         try:
             patient_id = input("Enter patient ID: ")
             if not self.patient_exists(patient_id):
-                print("Patient not found.")
+                print("Patient not found. Please register patient first.")
                 return
 
             doctor_id = input("Enter doctor ID: ")
@@ -500,12 +497,7 @@ class ClinicManager:
                 print("Time slot is already booked.")
                 return
 
-            if self.appointments:
-                last_id = self.appointments[-1].appointment_id
-                id_number = int(last_id[1:]) + 1
-                appointment_id = f"A{id_number:03d}"
-            else:
-                appointment_id = "A001"
+            appointment_id = len(self.appointments) + 1
 
             self.appointments.append(
                 Appointment(
@@ -541,20 +533,35 @@ class ClinicManager:
 
     def reschedule_appointment(self):
         try:
-            appointment_id = input("Enter appointment ID: ")
+            patient_id = input("Enter patient ID: ")
+
+            patient_apps = [
+                a for a in self.appointments
+                if a.patient_id == patient_id and a.status == "Booked"
+            ]
+
+            if not patient_apps:
+                print("No active appointments for this patient.")
+                return
+
+            print("\nID | Date | Time | Doctor | Department | Purpose")
+            print("-" * 65)
+            for a in patient_apps:
+                print(
+                    f"{a.appointment_id} | {a.date} | {a.time} | "
+                    f"{a.doctor_id} | {a.department} | {a.purpose}"
+                )
+
+            appointment_id = input("\nEnter appointment ID to reschedule: ")
+            new_date = input("Enter new date (YYYY-MM-DD): ")
+            new_time = input("Enter new time (HH:MM): ")
+
+            if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
+                print("Time slot is already booked.")
+                return
 
             for a in self.appointments:
-                if a.appointment_id == appointment_id and a.status == "Booked":
-                    new_date = input("Enter new date (YYYY-MM-DD): ")
-                    new_time = input("Enter new time (HH:MM): ")
-
-                    if not self.check_doctor_availability(a.doctor_id, new_date, new_time):
-                        return
-
-                    if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
-                        print("Time slot is already booked.")
-                        return
-
+                if a.appointment_id == appointment_id:
                     a.date = new_date
                     a.time = new_time
                     save_appointments(self.appointments)
@@ -571,11 +578,13 @@ class ClinicManager:
             print("No appointments found.")
             return
 
-        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status ")
+        print("\nAppointment ID | Patient | Doctor | Date | Time | Department | Status")
 
         for a in self.appointments:
+            patient_name = self.get_patient_name(a.patient_id)
+
             print(
-                f"{a.appointment_id} | {self.get_patient_name(a.patient_id)} | " 
+                f"{a.appointment_id} | {patient_name} | "
                 f"{a.doctor_id} | {a.date} | "
                 f"{a.time}-{a.get_end_time()} | "
                 f"{a.department} | {a.status}"
@@ -585,7 +594,7 @@ class ClinicManager:
         choice = input("Search by: 1. Doctor or 2. Department: ")
 
         found = False
-        print("Appointment ID | Patient | Doctor | Date | Time | Department | Status ")
+        print("\nAppointment ID | Patient | Doctor | Date | Time | Department | Status ")
 
         if choice == "1":
             doctor_id = input("Enter doctor ID: ")
@@ -607,13 +616,6 @@ class ClinicManager:
 
         if not found:
             print("No matching appointments found.")
-#DOCTOR MANAGEMENT
-
-    # DOCTOR MANAGEMENT ====>>> HANIF
-    ''' 
-    show_doctors() 
-    search_doctor()
-    '''
 
 # MAIN MENU
 
@@ -623,7 +625,7 @@ def main():
 
     while True:
         print("\n" + "=" * 50)
-        print("   CLINIC APPOINTMENT & PATIENT MANAGEMENT SYSTEM")
+        print("   CLINIC APPOINTMENT & PATIENT MANAGEMENT SYSTEM  ")
         print("=" * 50)
         print("\n--- Patient Management ---")
         print("1. Add Patient")
@@ -664,10 +666,10 @@ def main():
         elif choice == "10":
             system.search_appointment()
         elif choice == "0":
-            print("\n✓ Thank you for using Clinic Management System. Goodbye!")
+            print("\nThank you for using Clinic Management System. Goodbye!")
             break
         else:
-            print("\n✗ Invalid choice. Please try again.")
+            print("\nInvalid choice. Please try again.")
 
 
 if __name__ == "__main__":
