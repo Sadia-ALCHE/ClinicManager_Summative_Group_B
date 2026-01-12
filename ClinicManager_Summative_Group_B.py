@@ -5,7 +5,6 @@ Halimatu Sadia Mohammed
 Hanif Olayiwola '''
 
 import csv
-import os
 from datetime import datetime, timedelta
 # PATIENT CLASS
 class Patient:
@@ -30,7 +29,7 @@ class Appointment:
                  status="Booked"):
         self.appointment_id = appointment_id  # The unique ID for each appointment
         self.patient_id = patient_id  # Unique ID of the patient(e.g., P001)
-        self.doctor_id = doctor_id  # The ID of the doctor (UPDATED from 'doctor')
+        self.doctor_id = doctor_id  # The ID of the doctor(e.g., D001)
         self.date = date  # Appointment date (format: YYYY-MM-DD)
         self.time = time  # Appointment time (format: HH:MM)
         self.duration = int(duration)  # Duration in minutes
@@ -100,7 +99,6 @@ def load_patients(filename="patients.csv"):
                     gender=row['gender']
                 )
                 patients.append(patient)
-        print(f"✓ Loaded {len(patients)} patients from {filename}")
 
     except FileNotFoundError:
         print(f"Warning: {filename} not found. Starting with empty patient list.")
@@ -150,7 +148,6 @@ def load_doctors(filename="doctors.csv"):
                     end_time=row['end_time']
                 )
                 doctors.append(doctor)
-        print(f"✓ Loaded {len(doctors)} doctors from {filename}")
 
     except FileNotFoundError:
         print(f"Warning: {filename} not found. Starting with empty doctor list.")
@@ -205,7 +202,6 @@ def load_appointments(filename="appointments.csv"):
                     status=row['status']
                 )
                 appointments.append(appointment)
-        print(f"✓ Loaded {len(appointments)} appointments from {filename}")
 
     except FileNotFoundError:
         print(f"Warning: {filename} not found. Starting with empty appointment list.")
@@ -553,7 +549,7 @@ class ClinicManager:
             for a in patient_apps:
                 print(
                     f"{a.appointment_id} | {a.date} | {a.time} | "
-                    f"{a.doctor} | {a.department} | {a.purpose}"
+                    f"{a.doctor_id} | {a.department} | {a.purpose}"
                 )
 
             appointment_id = input("\nEnter appointment ID to reschedule: ")
