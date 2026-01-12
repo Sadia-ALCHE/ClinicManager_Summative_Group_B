@@ -2,7 +2,8 @@
 Clinic Appointment & Patient Management System(Group B)
 Team Members:
 Halimatu Sadia Mohammed
-Hanif Olayiwola '''
+Hanif Olayiwola
+'''
 
 import csv
 from datetime import datetime, timedelta
@@ -22,7 +23,7 @@ class Patient:
         return f"{self.patient_id} | {self.name} | Age: {self.age} | Contact: {self.contact} | Gender: {self.gender}"
 
 # APPOINTMENT CLASS
-'''Represents an appointment of a patient in the clinic system
+''' Represents an appointment of a patient in the clinic system
 It is going to help us store appointment-related details plus status. '''
 class Appointment:
     def __init__(self, appointment_id, patient_id, doctor_id, date, time, duration, department, purpose,
@@ -282,7 +283,7 @@ class ClinicManager:
         return True
 
     def slot_available(self, doctor_id, date, time, duration):
-        '''Check for overlapping appointments using duration'''
+        ''' Check for overlapping appointments using duration '''
         new_start = datetime.strptime(time, "%H:%M")
         new_end = new_start + timedelta(minutes=duration)
 
@@ -375,7 +376,7 @@ class ClinicManager:
     def show_patients(self):
         """Display all patient records"""
         if not self.patients:
-            print("\n⚠ No patients in the system")
+            print("\n No patients in the system")
             return
 
         print(f"\n=== All Patients ({len(self.patients)} total) ===")
@@ -393,7 +394,7 @@ class ClinicManager:
     def show_doctors(self):
         """Display all doctors"""
         if not self.doctors:
-            print("\n⚠ No doctors in the system")
+            print("\n No doctors in the system")
             return
 
         print(f"\n=== All Doctors ({len(self.doctors)} total) ===")
@@ -420,13 +421,13 @@ class ClinicManager:
         choice = input("Choose search type (1-3): ").strip()
 
         if choice not in ["1", "2", "3"]:
-            print("✗ Invalid choice")
+            print(" Invalid choice")
             return
 
         search_term = input("Enter search term: ").strip()
 
         if not search_term:
-            print("✗ Error: Search term cannot be empty")
+            print(" Error: Search term cannot be empty")
             return
 
         found_doctors = []
@@ -445,7 +446,7 @@ class ClinicManager:
 
         # Display results
         if found_doctors:
-            print(f"\n✓ Found {len(found_doctors)} doctor(s):")
+            print(f"\nFound {len(found_doctors)} doctor(s):")
             print("-" * 100)
             for doctor in found_doctors:
                 print(doctor)
@@ -544,11 +545,11 @@ class ClinicManager:
                 print("No active appointments for this patient.")
                 return
 
-            print("\nID | Date | Time | Doctor | Department | Purpose")
+            print("\nAppointment ID | Patient ID | Date | Time | Doctor | Department | Purpose")
             print("-" * 65)
             for a in patient_apps:
                 print(
-                    f"{a.appointment_id} | {a.date} | {a.time} | "
+                    f"{a.appointment_id} | {a.patient_id} | {a.date} | {a.time} | "
                     f"{a.doctor_id} | {a.department} | {a.purpose}"
                 )
 
