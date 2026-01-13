@@ -580,6 +580,7 @@ class ClinicManager:
             return
 
         print("\nAppointment ID | Patient | Doctor | Date | Time | Department | Status")
+        print("-" * 100)
 
         for a in self.appointments:
             patient_name = self.get_patient_name(a.patient_id)
@@ -592,31 +593,41 @@ class ClinicManager:
             )
 
     def search_appointment(self):
-        choice = input("Search by: 1. Doctor or 2. Department: ")
+        print("\nSearch appointment by:")
+        print("1. Patient ID")
+        print("2. Doctor ID")
 
-        found = False
-        print("\nAppointment ID | Patient | Doctor | Date | Time | Department | Status ")
+        choice = input("Enter choice (1 or 2): ").strip()
+
+        results = []
 
         if choice == "1":
-            doctor_id = input("Enter doctor ID: ")
-            for a in self.appointments:
-                if a.doctor_id == doctor_id:
-                    print(a)
-                    found = True
+            patient_id = input("Enter patient ID: ").strip()
+            results = [a for a in self.appointments if a.patient_id == patient_id]
 
         elif choice == "2":
-            department = input("Enter department: ")
-            for a in self.appointments:
-                if a.department == department:
-                    print(a)
-                    found = True
+            doctor_id = input("Enter doctor ID: ").strip()
+            results = [a for a in self.appointments if a.doctor_id == doctor_id]
 
         else:
             print("Invalid choice.")
             return
 
-        if not found:
+        if not results:
             print("No matching appointments found.")
+            return
+
+        print("\nAppointment ID | Patient | Doctor | Date | Time | Department | Status")
+        print("-" * 75)
+
+        for a in results:
+            patient_name = self.get_patient_name(a.patient_id)
+            print(
+                f"{a.appointment_id} | {patient_name} | {a.doctor_id} | "
+                f"{a.date} | {a.time}-{a.get_end_time()} | "
+                f"{a.department} | {a.status}"
+            )
+
 
 # MAIN MENU
 
