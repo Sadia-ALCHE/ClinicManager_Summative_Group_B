@@ -22,6 +22,7 @@ class Patient:
         """Format patient details for display"""
         return f"{self.patient_id} | {self.name} | Age: {self.age} | Contact: {self.contact} | Gender: {self.gender}"
 
+
 # APPOINTMENT CLASS
 ''' Represents an appointment of a patient in the clinic system
 It is going to help us store appointment-related details plus status. '''
@@ -33,7 +34,7 @@ class Appointment:
         self.doctor_id = doctor_id  # The ID of the doctor(e.g., D001)
         self.date = date  # Appointment date (format: YYYY-MM-DD)
         self.time = time  # Appointment time (format: HH:MM)
-        self.duration = int(duration)  # Duration in minutes
+        self.duration = int(duration)  # Duration of appointment
         self.department = department  # The department/type of appointment (Dental, X-Ray, etc.)
         self.purpose = purpose  # Purpose of the visit
         self.status = status  # Status of appointment (Booked or Cancelled)
@@ -53,6 +54,7 @@ class Appointment:
         return (f"{self.appointment_id} | Patient: {self.patient_id} | Doctor: {self.doctor_id} | "
                 f"{self.date} {self.time}-{end_time} ({self.duration}min) | "
                 f"{self.department} | {self.purpose} | Status: {self.status}")
+
 
 
 class Doctor:
@@ -105,7 +107,7 @@ def load_patients(filename="patients.csv"):
         print(f"Warning: {filename} not found. Starting with empty patient list.")
 
     except Exception as e:
-        print(f"✗ Error loading patients: {e}")
+        print(f"Error loading patients: {e}")
 
     return patients
 
@@ -128,7 +130,7 @@ def save_patients(patients, filename="patients.csv"):
                 })
 
     except Exception as e:
-        print(f"✗ Error saving patients: {e}")
+        print(f"Error saving patients: {e}")
 
 
 def load_doctors(filename="doctors.csv"):
@@ -234,7 +236,7 @@ def save_appointments(appointments, filename="appointments.csv"):
                 })
 
     except Exception as e:
-        print(f"✗ Error saving appointments: {e}")
+        print(f"Error saving appointments: {e}")
 
 #  CLINIC MANAGER
 class ClinicManager:
