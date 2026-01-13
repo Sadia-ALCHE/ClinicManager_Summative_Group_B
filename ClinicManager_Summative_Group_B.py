@@ -126,7 +126,6 @@ def save_patients(patients, filename="patients.csv"):
                     'contact': patient.contact,
                     'gender': patient.gender
                 })
-        print(f"✓ Saved {len(patients)} patients to {filename}")
 
     except Exception as e:
         print(f"✗ Error saving patients: {e}")
@@ -177,7 +176,6 @@ def save_doctors(doctors, filename="doctors.csv"):
                     'start_time': doctor.start_time,
                     'end_time': doctor.end_time
                 })
-        print(f"✓ Saved {len(doctors)} doctors to {filename}")
 
     except Exception as e:
         print(f"✗ Error saving doctors: {e}")
@@ -234,7 +232,6 @@ def save_appointments(appointments, filename="appointments.csv"):
                     'purpose': appt.purpose,
                     'status': appt.status
                 })
-        print(f"✓ Saved {len(appointments)} appointments to {filename}")
 
     except Exception as e:
         print(f"✗ Error saving appointments: {e}")
@@ -314,21 +311,21 @@ class ClinicManager:
         # Get patient details
         name = input("Enter patient name: ").strip()
         if not name:
-            print("✗ Error: Name cannot be empty")
+            print("Error: Name cannot be empty")
             return
 
         try:
             age = int(input("Enter age: "))
             if age <= 0 or age > 120:
-                print("✗ Error: Invalid age")
+                print("Error: Invalid age")
                 return
         except ValueError:
-            print("✗ Error: Age must be a number")
+            print("Error: Age must be a number")
             return
 
         contact = input("Enter contact number: ").strip()
         if not contact:
-            print("✗ Error: Contact cannot be empty")
+            print("Error: Contact cannot be empty")
             return
 
         gender = input("Enter gender (Male/Female): ").strip()
@@ -343,7 +340,7 @@ class ClinicManager:
         # Save to CSV
         save_patients(self.patients)
 
-        print(f"\n✓ Patient registered successfully!")
+        print(f"\n Patient registered successfully!")
         print(new_patient)
 
     def search_patient(self):
@@ -352,7 +349,7 @@ class ClinicManager:
         search_term = input("Enter Patient ID or Name: ").strip()
 
         if not search_term:
-            print("✗ Error: Search term cannot be empty")
+            print(" Error: Search term cannot be empty")
             return
 
         found_patients = []
@@ -365,13 +362,13 @@ class ClinicManager:
 
         # Display results
         if found_patients:
-            print(f"\n✓ Found {len(found_patients)} patient(s):")
+            print(f"\n Found {len(found_patients)} patient(s):")
             print("-" * 80)
             for patient in found_patients:
                 print(patient)
             print("-" * 80)
         else:
-            print(f"✗ No patients found matching '{search_term}'")
+            print(f" No patients found matching '{search_term}'")
 
     def show_patients(self):
         """Display all patient records"""
@@ -462,6 +459,9 @@ class ClinicManager:
                 print("Patient not found. Please register patient first.")
                 return
 
+            print("\nAvailable Doctors:")
+            self.show_doctors()
+
             doctor_id = input("Enter doctor ID: ")
             if not self.doctor_exists(doctor_id):
                 print("Doctor not found.")
@@ -498,7 +498,13 @@ class ClinicManager:
                 print("Time slot is already booked.")
                 return
 
-            appointment_id = len(self.appointments) + 1
+            # Generate appointment ID
+            if self.appointments:
+                last_id = self.appointments[-1].appointment_id
+                number = int(last_id[1:]) + 1
+                appointment_id = f"A{number:03d}"
+            else:
+                appointment_id = "A001"
 
             self.appointments.append(
                 Appointment(
