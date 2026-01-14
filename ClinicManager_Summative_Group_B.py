@@ -56,7 +56,6 @@ class Appointment:
                 f"{self.department} | {self.purpose} | Status: {self.status}")
 
 
-
 class Doctor:
     """Represents a doctor in the clinic system"""
 
