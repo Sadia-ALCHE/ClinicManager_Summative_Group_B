@@ -9,12 +9,16 @@ import csv
 from datetime import datetime, timedelta
 # PATIENT CLASS
 class Patient:
-    """Represents a patient in the clinic system"""
+    """Represents a patient in the clinic system
+    This class stores all patient information including their unique ID,
+    personal details, and contact information. Each patient object represents
+    one row in the patients.csv file.
+    """
 
     def __init__(self, patient_id, name, age, contact, gender):
         self.patient_id = patient_id  # Unique ID (e.g., P001)
         self.name = name  # Full name
-        self.age = int(age)  # Age
+        self.age = int(age)  # Convert age to integer
         self.contact = contact  # Phone number
         self.gender = gender  # Gender (Male/Female)
 
@@ -44,8 +48,11 @@ class Appointment:
         Calculate when the appointment ends based on start time and duration.
         Returns: End time as a string in HH:MM format
         """
+        # Convert start time string to datetime object
         start = datetime.strptime(self.time, "%H:%M")
+        # Add duration to get end time
         end = start + timedelta(minutes=self.duration)
+        # Convert back to string format
         return end.strftime("%H:%M")
 
     def __str__(self):
@@ -73,6 +80,7 @@ class Doctor:
         if isinstance(date, str):
             date = datetime.strptime(date, "%Y-%m-%d")
         day_name = date.strftime("%a")
+        # Get day name (Mon, Tue, etc.)
         return day_name in self.available_days
 
     def is_within_working_hours(self, time):
@@ -88,12 +96,15 @@ class Doctor:
 #FILE HANDLING
 def load_patients(filename="patients.csv"):
     """Load patient data from CSV file"""
-    patients = []
+    patients = [] # Initialize empty list
 
     try:
+        # Open file for reading
         with open(filename, 'r') as file:
-            reader = csv.DictReader(file)
+            reader = csv.DictReader(file) # Read CSV with headers
+            # Loop through each row
             for row in reader:
+                # Create Patient object from row data
                 patient = Patient(
                     patient_id=row['patient_id'],
                     name=row['name'],
@@ -101,25 +112,29 @@ def load_patients(filename="patients.csv"):
                     contact=row['contact'],
                     gender=row['gender']
                 )
-                patients.append(patient)
+                patients.append(patient) # Add to list
 
     except FileNotFoundError:
+        # File doesn't exist yet (first run)
         print(f"Warning: {filename} not found. Starting with empty patient list.")
 
     except Exception as e:
+        # Catch any other errors
         print(f"Error loading patients: {e}")
 
-    return patients
+    return patients # Return list (empty or filled)
 
 
 def save_patients(patients, filename="patients.csv"):
     """Save patient data to CSV file"""
     try:
+        # Open file for writing (overwrites existing)
         with open(filename, 'w', newline='') as file:
-            fieldnames = ['patient_id', 'name', 'age', 'contact', 'gender']
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            fieldnames = ['patient_id', 'name', 'age', 'contact', 'gender'] # Define columns
+            writer = csv.DictWriter(file, fieldnames=fieldnames) # Create CSV writer
 
-            writer.writeheader()
+            writer.writeheader()   # Write column headers
+            # Write each patient as a row
             for patient in patients:
                 writer.writerow({
                     'patient_id': patient.patient_id,
@@ -135,12 +150,14 @@ def save_patients(patients, filename="patients.csv"):
 
 def load_doctors(filename="doctors.csv"):
     """Load doctor data from CSV file"""
-    doctors = []
+    doctors = [] # Initialize empty list
 
     try:
-        with open(filename, 'r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
+        with open(filename, 'r') as file: # Open for reading
+            reader = csv.DictReader(file) # Read with headers
+
+            for row in reader: # Loop through rows
+                # Create Doctor object from row
                 doctor = Doctor(
                     doctor_id=row['doctor_id'],
                     name=row['name'],
@@ -149,7 +166,7 @@ def load_doctors(filename="doctors.csv"):
                     start_time=row['start_time'],
                     end_time=row['end_time']
                 )
-                doctors.append(doctor)
+                doctors.append(doctor) # Add to list
 
     except FileNotFoundError:
         print(f"Warning: {filename} not found. Starting with empty doctor list.")
@@ -163,13 +180,13 @@ def load_doctors(filename="doctors.csv"):
 def save_doctors(doctors, filename="doctors.csv"):
     """Save doctor data to CSV file"""
     try:
-        with open(filename, 'w', newline='') as file:
+        with open(filename, 'w', newline='') as file: # Open for writing
             fieldnames = ['doctor_id', 'name', 'specialty', 'available_days', 'start_time', 'end_time']
             writer = csv.DictWriter(file, fieldnames=fieldnames)
 
-            writer.writeheader()
-            for doctor in doctors:
-                available_days_str = '-'.join(doctor.available_days)
+            writer.writeheader() # Write headers
+            for doctor in doctors: # Loop through doctors
+                available_days_str = '-'.join(doctor.available_days) # Convert list to string
                 writer.writerow({
                     'doctor_id': doctor.doctor_id,
                     'name': doctor.name,
@@ -185,12 +202,13 @@ def save_doctors(doctors, filename="doctors.csv"):
 
 def load_appointments(filename="appointments.csv"):
     """Load appointment data from CSV file"""
-    appointments = []
+    appointments = [] # Initialize empty list
 
     try:
-        with open(filename, 'r') as file:
+        with open(filename, 'r') as file: # Open for reading
             reader = csv.DictReader(file)
-            for row in reader:
+            for row in reader: # Loop through rows
+                # Create Appointment object
                 appointment = Appointment(
                     appointment_id=row['appointment_id'],
                     patient_id=row['patient_id'],
@@ -221,8 +239,8 @@ def save_appointments(appointments, filename="appointments.csv"):
                           'duration', 'department', 'purpose', 'status']
             writer = csv.DictWriter(file, fieldnames=fieldnames)
 
-            writer.writeheader()
-            for appt in appointments:
+            writer.writeheader() # Write column headers
+            for appt in appointments: # Loop through appointments
                 writer.writerow({
                     'appointment_id': appt.appointment_id,
                     'patient_id': appt.patient_id,
@@ -241,52 +259,58 @@ def save_appointments(appointments, filename="appointments.csv"):
 #  CLINIC MANAGER
 class ClinicManager:
     def __init__(self):
+        # Load all data from CSV files
         self.patients = load_patients()
         self.doctors = load_doctors()
         self.appointments = load_appointments()
 
     # VALIDATION SECTIONS
     def get_patient_name(self, patient_id):
+        # Loop through all patients
         for p in self.patients:
             if p.patient_id == patient_id:
-                return p.name
-        return "Unknown"
+                return p.name # Return name if found
+        return "Unknown" # Return default if not found
 
     def patient_exists(self, patient_id):
+        # Return True if any patient has this ID
         return any(p.patient_id == patient_id for p in self.patients)
 
     def doctor_exists(self, doctor_id):
+        # Return True if any doctor has this ID
         return any(d.doctor_id == doctor_id for d in self.doctors)
 
     def get_doctor_by_id(self, doctor_id):
+        # Loop through doctors
         for d in self.doctors:
             if d.doctor_id == doctor_id:
                 return d
         return None
 
     def check_doctor_availability(self, doctor_id, date, time):
-        doctor = self.get_doctor_by_id(doctor_id)
-
+        doctor = self.get_doctor_by_id(doctor_id) # Get doctor object
+        # Check if doctor exists
         if not doctor:
             print("Doctor not found")
             return False
-
+        # Check if doctor works on this day
         if not doctor.is_available_on_day(date):
             print("Doctor does not work on this day.")
             return False
-
+        # Check if time is within working hours
         if not doctor.is_within_working_hours(time):
             print("Outside doctor's working hours.")
             return False
 
-        return True
+        return True # All checks passed
 
     def slot_available(self, doctor_id, date, time, duration):
         ''' Check for overlapping appointments using duration '''
         new_start = datetime.strptime(time, "%H:%M")
         new_end = new_start + timedelta(minutes=duration)
-
+        # Check all existing appointments
         for a in self.appointments:
+            # Only check same doctor, same date, active appointments
             if a.doctor_id == doctor_id and a.date == date and a.status == "Booked":
                 existing_start = datetime.strptime(a.time, "%H:%M")
                 existing_end = existing_start + timedelta(minutes=a.duration)
@@ -302,34 +326,34 @@ class ClinicManager:
 
         # Generate new patient ID
         if self.patients:
-            last_id = self.patients[-1].patient_id
-            id_number = int(last_id[1:]) + 1
-            patient_id = f"P{id_number:03d}"
+            last_id = self.patients[-1].patient_id # Get last patient ID
+            id_number = int(last_id[1:]) + 1 # Extract number and increment
+            patient_id = f"P{id_number:03d}" # Format with leading zeros
         else:
-            patient_id = "P001"
+            patient_id = "P001" # First patient
 
         print(f"New Patient ID: {patient_id}")
 
-        # Get patient details
+        # Get patient name
         name = input("Enter patient name: ").strip()
-        if not name:
+        if not name: # Validate not empty
             print("Error: Name cannot be empty")
             return
-
+        # Get and validate age
         try:
-            age = int(input("Enter age: "))
-            if age <= 0 or age > 120:
+            age = int(input("Enter age: ")) # Convert to integer
+            if age <= 0 or age > 120: # Check reasonable range
                 print("Error: Invalid age")
                 return
-        except ValueError:
+        except ValueError: # Handle non-numeric input
             print("Error: Age must be a number")
             return
-
+        # Get contact number
         contact = input("Enter contact number: ").strip()
         if not contact:
             print("Error: Contact cannot be empty")
             return
-
+        # Get and validate gender
         gender = input("Enter gender (Male/Female): ").strip()
         if gender not in ["Male", "Female"]:
             print("✗ Error: Gender must be Male or Female")
@@ -337,7 +361,7 @@ class ClinicManager:
 
         # Create and add patient
         new_patient = Patient(patient_id, name, age, contact, gender)
-        self.patients.append(new_patient)
+        self.patients.append(new_patient) # Add to list
 
         # Save to CSV
         save_patients(self.patients)
@@ -354,10 +378,11 @@ class ClinicManager:
             print(" Error: Search term cannot be empty")
             return
 
-        found_patients = []
+        found_patients = [] # Store results
 
         # Search by ID or name
         for patient in self.patients:
+            # Check if matches ID (exact) or name (partial, case-insensitive)
             if (search_term.upper() == patient.patient_id.upper() or
                     search_term.lower() in patient.name.lower()):
                 found_patients.append(patient)
@@ -374,15 +399,17 @@ class ClinicManager:
 
     def show_patients(self):
         """Display all patient records"""
-        if not self.patients:
+        if not self.patients: # Check if empty
             print("\n No patients in the system")
             return
 
         print(f"\n=== All Patients ({len(self.patients)} total) ===")
         print("-" * 80)
+        # Print table header with column alignment
         print(f"{'ID':<8} {'Name':<25} {'Age':<5} {'Contact':<15} {'Gender':<10}")
         print("-" * 80)
 
+        # Print each patient as a row
         for patient in self.patients:
             print(f"{patient.patient_id:<8} {patient.name:<25} {patient.age:<5} "
                   f"{patient.contact:<15} {patient.gender:<10}")
@@ -392,15 +419,16 @@ class ClinicManager:
     # DOCTOR MANAGEMENT
     def show_doctors(self):
         """Display all doctors"""
-        if not self.doctors:
+        if not self.doctors: # Check if empty
             print("\n No doctors in the system")
             return
 
         print(f"\n=== All Doctors ({len(self.doctors)} total) ===")
         print("-" * 100)
+        # Print table header
         print(f"{'ID':<8} {'Name':<25} {'Specialty':<20} {'Available Days':<20} {'Hours':<15}")
         print("-" * 100)
-
+        # Print each doctor as a row
         for doctor in self.doctors:
             days = ', '.join(doctor.available_days)
             hours = f"{doctor.start_time}-{doctor.end_time}"
@@ -419,7 +447,8 @@ class ClinicManager:
 
         choice = input("Choose search type (1-3): ").strip()
 
-        if choice not in ["1", "2", "3"]:
+        if choice not in ["1", "2", "3"]: # Validate choice
+
             print(" Invalid choice")
             return
 
@@ -429,7 +458,7 @@ class ClinicManager:
             print(" Error: Search term cannot be empty")
             return
 
-        found_doctors = []
+        found_doctors = [] # Store results
 
         # Search based on choice
         for doctor in self.doctors:
@@ -455,7 +484,7 @@ class ClinicManager:
 
     # APPOINTMENT MANAGEMENT
     def book_appointment(self):
-        try:
+        try: # Get and validate patient ID
             patient_id = input("Enter patient ID: ")
             if not self.patient_exists(patient_id):
                 print("Patient not found. Please register patient first.")
@@ -463,7 +492,7 @@ class ClinicManager:
 
             print("\nAvailable Doctors:")
             self.show_doctors()
-
+            # Get and validate doctor ID
             doctor_id = input("Enter doctor ID: ")
             if not self.doctor_exists(doctor_id):
                 print("Doctor not found.")
@@ -493,9 +522,10 @@ class ClinicManager:
             time = input("Enter time (HH:MM): ")
             purpose = input("Enter purpose: ")
 
+            # Check doctor availability
             if not self.check_doctor_availability(doctor_id, date, time):
                 return
-
+            # Check for time conflicts
             if not self.slot_available(doctor_id, date, time, duration):
                 print("Time slot is already booked.")
                 return
@@ -507,7 +537,7 @@ class ClinicManager:
                 appointment_id = f"A{number:03d}"
             else:
                 appointment_id = "A001"
-
+            # Create and add appointment
             self.appointments.append(
                 Appointment(
                     appointment_id,
@@ -520,39 +550,39 @@ class ClinicManager:
                     purpose
                 )
             )
-
+            # Save to file
             save_appointments(self.appointments)
             print("Appointment booked successfully.")
 
-        except ValueError:
+        except ValueError: # Handle conversion errors
             print("Invalid input.")
 
     def cancel_appointment(self):
         try:
             appointment_id = input("Enter appointment ID: ")
-            for a in self.appointments:
+            for a in self.appointments: # Search for appointment
                 if a.appointment_id == appointment_id:
-                   a.status = "Cancelled"
-                   save_appointments(self.appointments)
+                   a.status = "Cancelled" # Update status
+                   save_appointments(self.appointments) # Save changes
                    print("Appointment cancelled successfully.")
                    return
             print("Appointment not found.")
-        except ValueError:
-            print("Invalid input.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def reschedule_appointment(self):
         try:
             patient_id = input("Enter patient ID: ")
-
+            # Get all active appointments for this patient
             patient_apps = [
                 a for a in self.appointments
                 if a.patient_id == patient_id and a.status == "Booked"
             ]
 
-            if not patient_apps:
+            if not patient_apps: # Check if patient has any active appointments
                 print("No active appointments for this patient.")
                 return
-
+            # Display patient's appointments
             print("\nAppointment ID | Patient ID | Date | Time | Doctor | Department | Purpose")
             print("-" * 65)
             for a in patient_apps:
@@ -560,22 +590,36 @@ class ClinicManager:
                     f"{a.appointment_id} | {a.patient_id} | {a.date} | {a.time} | "
                     f"{a.doctor_id} | {a.department} | {a.purpose}"
                 )
-
+            # Get appointment to reschedule
             appointment_id = input("\nEnter appointment ID to reschedule: ")
+
+            # Find the specific appointment first
+            target_appointment = None
+            for a in self.appointments:
+                if a.appointment_id == appointment_id and a.status == "Booked":
+                    target_appointment = a
+                    break
+            # Check if appointment found
+            if not target_appointment:
+                print("Appointment not found or already cancelled.")
+                return
+
             new_date = input("Enter new date (YYYY-MM-DD): ")
             new_time = input("Enter new time (HH:MM): ")
 
-            if not self.slot_available(a.doctor_id, new_date, new_time, a.duration):
+            # Check availability
+            if not self.check_doctor_availability(target_appointment.doctor_id, new_date, new_time):
+                return
+
+            if not self.slot_available(target_appointment.doctor_id, new_date, new_time, target_appointment.duration):
                 print("Time slot is already booked.")
                 return
 
-            for a in self.appointments:
-                if a.appointment_id == appointment_id:
-                    a.date = new_date
-                    a.time = new_time
-                    save_appointments(self.appointments)
-                    print("Appointment rescheduled successfully.")
-                    return
+            # Update the appointment
+            target_appointment.date = new_date
+            target_appointment.time = new_time
+            save_appointments(self.appointments)
+            print("Appointment rescheduled successfully.")
 
             print("Appointment not found.")
 
@@ -636,7 +680,6 @@ class ClinicManager:
                 f"{a.department} | {a.status}"
             )
 
-
 # MAIN MENU
 
 def main():
@@ -691,13 +734,5 @@ def main():
         else:
             print("\nInvalid choice. Please try again.")
 
-
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
