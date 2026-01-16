@@ -365,8 +365,8 @@ class ClinicManager:
         # Save to CSV
         save_patients(self.patients)
 
-        print(new_patient)
         print(f"\n Patient registered successfully!")
+        print(new_patient)
 
     def search_patient(self):
         """Search for a patient by ID or name"""
