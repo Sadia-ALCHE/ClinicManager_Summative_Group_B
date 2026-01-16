@@ -536,6 +536,7 @@ class ClinicManager:
                 appointment_id = f"A{number:03d}"
             else:
                 appointment_id = "A001"
+
             # Create and add appointment
             self.appointments.append(
                 Appointment(
@@ -566,6 +567,7 @@ class ClinicManager:
                    print("Appointment cancelled successfully.")
                    return
             print("Appointment not found.")
+
         except Exception as e:
             print(f"Error: {e}")
 
@@ -594,10 +596,11 @@ class ClinicManager:
 
             # Find the specific appointment first
             target_appointment = None
-            for a in self.appointments:
-                if a.appointment_id == appointment_id and a.status == "Booked":
+            for a in patient_apps:
+                if a.appointment_id == appointment_id:
                     target_appointment = a
                     break
+
             # Check if appointment found
             if not target_appointment:
                 print("Appointment not found or already cancelled.")
@@ -620,10 +623,8 @@ class ClinicManager:
             save_appointments(self.appointments)
             print("Appointment rescheduled successfully.")
 
-            print("Appointment not found.")
-
         except ValueError:
-            print("Invalid input.")
+            print("Appointment not found.")
 
     def show_appointments(self):
         if not self.appointments:
