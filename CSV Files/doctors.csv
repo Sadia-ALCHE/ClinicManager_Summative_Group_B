@@ -1,6 +1,0 @@
-doctor_id,name,specialty,available_days,start_time,end_time
-D001,Dr. Amina Mensah,General Consultation,[Mon/Wed/Fri],08:00,16:00
-D002,Dr. Kojo Asante,Radiology,[Tue/Thu],09:00,15:00
-D003,Dr. Nana Yeboah,Cardiology,[Mon/Tue/Thu],10:00,17:00
-D004,Dr. Selina Owusu,Dentistry,[Wed/Fri],08:30,14:30
-D005,Dr. Michael Adjei,Physiology,[Mon/Thu/Sat],09:00,13:00
