@@ -6,7 +6,6 @@ This project is a console-based Clinic Appointment & Patient Management System d
 - File handling using CSV files
 - Input validation
 - Basic scheduling logic
-
 The system allows a clinic to manage patients, doctors, and appointments efficiently through a menu-driven interface.
 
 Team Members:
@@ -76,25 +75,68 @@ Responsibilities:
 - Prevent appointment clashes
 
 System Functionalities:
-A. Patient Management
-- Add new patient
-- Search patient by ID or name
-- Display all patients
+A. Patient Management:
+- Register new patients
+- Search patients by ID or name
+- View all registered patients
+- Automatic patient ID generation (e.g., P001)
 
-B. Doctor Management
-- Display all doctors
-- Search doctor by ID, name, or specialty
+B. Doctor Management:
+- Load doctors from CSV file
+- Search doctors by:
+   - Doctor ID
+   - Name
+   - Specialty
+- Display all doctors with availability days and working hours
 
 C. Appointment Management
-- Book appointment
-- Cancel appointment
-- Reschedule appointment
-- View all appointments
+- Book appointments with:
+     - Conflict checking
+     - Doctor availability validation
+- Cancel appointments
+- Reschedule existing appointments
 - Search appointments by patient or doctor
+- View all appointments
+- Automatic appointment ID generation (e.g., A001)
 
+How to Run the Program: 
+- First of all, make sure you have Python 3 installed
+- Open the project folder in a terminal or IDE
+- Run the file:
+  python ClinicManager_Summative_Group_B.py
+- Use the menu options to interact with the system
 
+Main Menu Options
+1. Add Patient
+2. Search Patient
+3. Show All Patients
+4. Show All Doctors
+5. Search Doctor
+6. Book Appointment
+7. Cancel Appointment
+8. Reschedule Appointment
+9. Show All Appointments
+10. Search Appointments
+0. Exit
 
+Error Handling:
+The system includes basic error handling using:
+- try-except ValueError for invalid numeric input
+- try-except Exception for unexpected errors
+- Validation checks for:
+      - Empty inputs
+      - Invalid dates and times
+      - Double booking
 
+Learning Outcomes:
+This project demonstrates:
+- Object-Oriented Programming design
+- Real-world problem modeling
+- File-based data persistence
+- Clean and readable Python code
+
+Conclusion
+The Clinic Appointment & Patient Management System successfully remains understandable and functional for our summative project.
 
 
 
