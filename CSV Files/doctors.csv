@@ -1,6 +1,0 @@
-doctor_id,name,specialty,available_days,start_time,end_time
-D001,Dr. Jane Cooper,General Practice,Mon-Tue-Wed-Thu-Fri,08:00,17:00
-D002,Dr. Robert Chen,Dentistry,Mon-Wed-Fri,09:00,16:00
-D003,Dr. Mwangi Kofi,Physiotherapy,Tue-Thu-Fri,10:00,18:00
-D004,Dr. Adora Nwogbo,Radiology,Mon-Tue-Wed-Thu-Fri,08:00,15:00
-D005,Dr. Ahmed Sadiq,Cardiology,Wed-Thu,13:00,19:00
