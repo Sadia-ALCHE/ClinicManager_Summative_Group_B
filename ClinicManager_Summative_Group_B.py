@@ -59,7 +59,7 @@ class Appointment:
         """Format the appointment details for display"""
         end_time = self.get_end_time()
         return (f"{self.appointment_id} | Patient: {self.patient_id} | Doctor: {self.doctor_id} | "
-                f"{self.date} {self.time}-{end_time} ({self.duration}min) | "
+                f"{self.date} {self.time}-{self.get_end_time} ({self.duration}min) | "
                 f"{self.department} | {self.purpose} | Status: {self.status}")
 
 
@@ -171,7 +171,7 @@ def load_doctors(filename="doctors.csv"):
         print(f"Warning: {filename} not found. Starting with empty doctor list.")
 
     except Exception as e:
-        print(f"✗ Error loading doctors: {e}")
+        print(f" Error loading doctors: {e}")
 
     return doctors
 
@@ -311,10 +311,10 @@ class ClinicManager:
         for a in self.appointments:
             # Only check same doctor, same date, active appointments
             if a.doctor_id == doctor_id and a.date == date and a.status == "Booked":
-                existing_start = datetime.strptime(a.time, "%H:%M")
-                existing_end = existing_start + timedelta(minutes=a.duration)
+                start = datetime.strptime(a.time, "%H:%M")
+                end = start + timedelta(minutes=a.duration)
                 # Overlap check
-                if new_start < existing_end and new_end > existing_start:
+                if new_start < end and new_end > start:
                     return False
         return True
 
@@ -355,7 +355,7 @@ class ClinicManager:
         # Get and validate gender
         gender = input("Enter gender (Male/Female): ").strip()
         if gender not in ["Male", "Female"]:
-            print("✗ Error: Gender must be Male or Female")
+            print("Error: Gender must be Male or Female")
             return
 
         # Create and add patient
@@ -483,7 +483,19 @@ class ClinicManager:
 
     # APPOINTMENT MANAGEMENT
     def book_appointment(self):
-        try: # Get and validate patient ID
+        try:
+            # Generate appointment ID
+            if not self.appointments:
+                appointment_id = "A001"
+            else:
+                max_number = 0
+                for a in self.appointments:
+                    current_number = int(a.appointment_id[1:])
+                if current_number > max_number:
+                    max_number = current_number
+                appointment_id = f"A{max_number + 1:03d}"
+
+            # Get and validate patient ID
             patient_id = input("Enter patient ID: ")
             if not self.patient_exists(patient_id):
                 print("Patient not found. Please register patient first.")
@@ -518,7 +530,21 @@ class ClinicManager:
                 return
 
             date = input("Enter date (YYYY-MM-DD): ")
+            # Validate date
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                print("Invalid date format. Use YYYY-MM-DD.")
+                return
+
+            # Time Validation
             time = input("Enter time (HH:MM): ")
+            try:
+                datetime.strptime(time, "%H:%M")
+            except ValueError:
+                print("Invalid time format. Use HH:MM.")
+                return
+
             purpose = input("Enter purpose: ")
 
             # Check doctor availability
@@ -528,14 +554,6 @@ class ClinicManager:
             if not self.slot_available(doctor_id, date, time, duration):
                 print("Time slot is already booked.")
                 return
-
-            # Generate appointment ID
-            if self.appointments:
-                last_id = self.appointments[-1].appointment_id
-                number = int(last_id[1:]) + 1
-                appointment_id = f"A{number:03d}"
-            else:
-                appointment_id = "A001"
 
             # Create and add appointment
             self.appointments.append(
@@ -606,8 +624,8 @@ class ClinicManager:
                 print("Appointment not found or already cancelled.")
                 return
 
-            new_date = input("Enter new date (YYYY-MM-DD): ")
-            new_time = input("Enter new time (HH:MM): ")
+            new_date = input("Enter new date (YYYY-MM-DD): ").strip()
+            new_time = input("Enter new time (HH:MM): ").strip()
 
             # Check availability
             if not self.check_doctor_availability(target_appointment.doctor_id, new_date, new_time):
