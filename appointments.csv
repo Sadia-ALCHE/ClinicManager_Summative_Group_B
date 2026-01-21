@@ -1,2 +1,2 @@
 appointment_id,patient_id,doctor_id,date,time,duration,department,purpose,status
-A001,P001,D001,2026-01-20,09:00-09:30,30,General Medicine,Routine Check-up,Booked
+A001,P001,D001,2026-01-20,09:00,30,General Medicine,Routine Check-up,Booked
