@@ -491,8 +491,8 @@ class ClinicManager:
                 max_number = 0
                 for a in self.appointments:
                     current_number = int(a.appointment_id[1:])
-                if current_number > max_number:
-                    max_number = current_number
+                    if current_number > max_number:
+                        max_number = current_number
                 appointment_id = f"A{max_number + 1:03d}"
 
             # Get and validate patient ID
